@@ -9,10 +9,12 @@ class Calculator {
     this.current = ''
     this.previous = ''
     this.operation = undefined
+    this.shouldUpdateInput = true
     this.updateDisplay()
   }
 
   appendInput(input) {
+    if(!this.operation && !this.shouldUpdateInput) return 
     this.current += input.toString()
     this.updateDisplay()
   }
@@ -39,18 +41,18 @@ class Calculator {
     this.current = computation
     this.previous = ''
     this.operation = undefined
+    this.shouldUpdateInput = false
     this.updateDisplay()
   }
 
   appendOperation(input) {
+    this.operation = input
     if (this.current === '') return
     if (this.previous !== '') {
       this.compute()
     }
     this.previous = this.current
     this.current = ''
-    this.operation = input
-    this.updateDisplay()
   }
 
   updateDisplay() {
@@ -63,7 +65,7 @@ class Calculator {
   }
 
   removeNumber() {
-    this.current = this.current.slice(0, this.current.length - 1)
+    this.current = this.current.toString().slice(0, this.current.length - 1)
     this.updateDisplay()
   }
 }
@@ -84,6 +86,7 @@ numbers.forEach((num) => {
 operations.forEach((num) => {
   num.addEventListener('click', () => {
     calculator.appendOperation(event.target.innerText)
+    calculator.updateDisplay()
   })
 })
 
